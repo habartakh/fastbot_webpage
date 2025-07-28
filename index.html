@@ -15,6 +15,10 @@
     <script type="text/javascript" src="mjpegcanvas.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/easeljs/lib/easeljs.min.js"></script>
+    <script type="text/javascript" src="ros2d.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -31,30 +35,52 @@
     <main id="vueApp">
         <div class="container">
             <div class="row">
+                <!-- Contains both connection and joystick-->
+
                 <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3>{{ menu_title }}</h3>
-                            <hr>
-                            <label>ROSBridge address</label>
-                            <br>
-                            <input type="text" v-model="rosbridge_address" />
-                            <br>
-                            <button class="mt-2 btn btn-success" v-if="connected"
-                                @click="disconnect">Connected!</button>
-                            <button class="mt-2 btn btn-primary" v-else @click="connect">Connect!</button>
+                    <div class="row">
+                        <!--Connection interface-->
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3>{{ menu_title }}</h3>
+                                    <hr>
+                                    <label>ROSBridge address</label>
+                                    <br>
+                                    <input type="text" v-model="rosbridge_address" />
+                                    <br>
+                                    <button class="mt-2 btn btn-success" v-if="connected"
+                                        @click="disconnect">Connected!</button>
+                                    <button class="mt-2 btn btn-primary" v-else @click="connect">Connect!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--New row-->
+                    <div class="row">
+                        <!--Joystick-->
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3 class="text-center">Joystick</h3>
+                                    <hr>
+                                    <p>Use to move the robot</p>
+                                    <div id="dragstartzone" @mousedown="startDrag" @mousemove="doDrag">
+                                    </div>
+                                    <div id="dragCircle" :style="dragCircleStyle"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!--Map-->
                 <div class="col-md-5">
                     <div class="card">
                         <div class="card-body text-center">
-                            <h2 class="text-center">Joystick</h2>
+                            <h2 class="text-center">Map</h2>
                             <hr>
-                            <p>Some actions for the robot</p>
-                            <div id="dragstartzone" @mousedown="startDrag" @mousemove="doDrag">
-                            </div>
-                            <div id="dragCircle" :style="dragCircleStyle"></div>
+                            <div id="map"></div>
                         </div>
                     </div>
                 </div>
@@ -65,7 +91,6 @@
                             <h4 class="text-center">Camera</h4>
                         </div>
                         <div id="divCamera"></div>
-
                     </div>
 
                 </div>

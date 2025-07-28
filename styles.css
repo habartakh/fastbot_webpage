@@ -1,8 +1,8 @@
 #dragstartzone {
     position: relative;
     display: inline-block;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border: 2px solid rgb(137, 123, 228);
     border-radius: 50%;
     z-index: 10;

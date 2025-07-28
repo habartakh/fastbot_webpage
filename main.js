@@ -3,7 +3,7 @@ let vueApp = new Vue({
     data: {
         // ros connection
         ros: null,
-        rosbridge_address: 'wss://i-0516b6efcac2c963d.robotigniteacademy.com/cf08e58a-57e9-43ca-95d6-ea0de354c341/rosbridge/',
+        rosbridge_address: 'wss://i-0480a3ce9baab5c10.robotigniteacademy.com/a5e5f539-a639-4ed0-9855-5bacb3ff328b/rosbridge/',
         connected: false,
         // page content
         menu_title: 'Connection',
@@ -19,7 +19,7 @@ let vueApp = new Vue({
             width: '50px',
             height: '50px',
         },
-        // joystick valules
+        // joystick values
         joystick: {
             vertical: 0,
             horizontal: 0,
@@ -29,6 +29,10 @@ let vueApp = new Vue({
         // subscriber data
         position: { x: 0, y: 0, z: 0, },
         orientation: {r: 0, p: 0, y: 0,},
+        // map 
+        mapViewer: null,
+        mapGridClient: null,
+        interval: null,
 
     },
     methods: {
@@ -79,6 +83,26 @@ let vueApp = new Vue({
 
                     console.log(message)
                 })
+
+                // Map setup
+                this.mapViewer = new ROS2D.Viewer({
+                    divID: 'map',
+                    width: 420,
+                    height: 360
+                })
+
+                // Setup the map client.
+                this.mapGridClient = new ROS2D.OccupancyGridClient({
+                    ros: this.ros,
+                    rootObject: this.mapViewer.scene,
+                    continuous: true,
+                })
+                // Scale the canvas to fit to the map
+                this.mapGridClient.on('change', () => {
+                    this.mapViewer.scaleToDimensions(this.mapGridClient.currentGrid.width, this.mapGridClient.currentGrid.height);
+                    this.mapViewer.shift(this.mapGridClient.currentGrid.pose.position.x, this.mapGridClient.currentGrid.pose.position.y)
+                })
+
             })
             this.ros.on('error', (error) => {
                 console.log('Something went wrong when trying to connect')
@@ -87,6 +111,7 @@ let vueApp = new Vue({
             this.ros.on('close', () => {
                 this.connected = false
                 document.getElementById('divCamera').innerHTML = ''
+                document.getElementById('map').innerHTML = ''
                 console.log('Connection to ROSBridge was closed!')
             })
         },
@@ -123,12 +148,12 @@ let vueApp = new Vue({
                 this.dragCircleStyle.display = 'inline-block'
 
                 let minTop = ref.offsetTop - parseInt(this.dragCircleStyle.height) / 2
-                let maxTop = minTop + 200
+                let maxTop = minTop + 150
                 let top = this.y + minTop
                 this.dragCircleStyle.top = `${top}px`
 
                 let minLeft = ref.offsetLeft - parseInt(this.dragCircleStyle.width) / 2
-                let maxLeft = minLeft + 200
+                let maxLeft = minLeft + 150
                 let left = this.x + minLeft
                 this.dragCircleStyle.left = `${left}px`
 
@@ -137,8 +162,8 @@ let vueApp = new Vue({
             }
         },
         setJoystickVals() {
-            this.joystick.vertical = -1 * ((this.y / 200) - 0.5)
-            this.joystick.horizontal = +1 * ((this.x / 200) - 0.5)
+            this.joystick.vertical = -1 * ((this.y / 150) - 0.5)
+            this.joystick.horizontal = +1 * ((this.x / 150) - 0.5)
         },
         resetJoystickVals() {
             this.joystick.vertical = 0
@@ -177,5 +202,11 @@ let vueApp = new Vue({
     mounted() {
         // page is ready
         window.addEventListener('mouseup', this.stopDrag)
+        // Set the communicatio interval to keep connection alive
+        this.interval = setInterval(() => {
+            if (this.ros != null && this.ros.isConnected) {
+                this.ros.getNodes((data) => { }, (error) => { })
+            }
+        }, 10000)
     },
 })
