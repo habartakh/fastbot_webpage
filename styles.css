@@ -1,0 +1,37 @@
+#dragstartzone {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border: 2px solid rgb(137, 123, 228);
+    border-radius: 50%;
+    z-index: 10;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+}
+
+#dragCircle {
+    position: absolute;
+    z-index: 9;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background-color: rgba(59, 148, 242, 0.3);
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+}
+
+#dragCircle:hover {
+    background-color: rgb(237, 166, 242);
+}
+
+.header {
+    height: 150px;
+    /* Example: set a fixed height of 80 pixels */
+}
+
+p {
+    line-height: 0.2;
+    /* Sets line height to 1.5 times the font size */
+}

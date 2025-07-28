@@ -1,0 +1,149 @@
+<html>
+
+<head>
+    <title>Fastbot navigation Webpage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+
+    <!-- EventEmitter2 (needed by mjpegcanvas) -->
+    <script src="https://cdn.jsdelivr.net/npm/eventemitter2@0.4.14/lib/eventemitter2.js"></script>
+
+    <script src="https://s3.eu-west-1.amazonaws.com/rosject.io/js/roslib.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <script type="text/javascript" src="mjpegcanvas.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+</head>
+
+<body class="d-flex flex-column h-100">
+    <!-- header of the page -->
+    <header class="header">
+        <div class="container">
+            <div class="jumbotron text-center">
+                <h1>FastBot Navigation Functionnalities</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- main content -->
+    <main id="vueApp">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>{{ menu_title }}</h3>
+                            <hr>
+                            <label>ROSBridge address</label>
+                            <br>
+                            <input type="text" v-model="rosbridge_address" />
+                            <br>
+                            <button class="mt-2 btn btn-success" v-if="connected"
+                                @click="disconnect">Connected!</button>
+                            <button class="mt-2 btn btn-primary" v-else @click="connect">Connect!</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h2 class="text-center">Joystick</h2>
+                            <hr>
+                            <p>Some actions for the robot</p>
+                            <div id="dragstartzone" @mousedown="startDrag" @mousemove="doDrag">
+                            </div>
+                            <div id="dragCircle" :style="dragCircleStyle"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Camera Feed-->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h4 class="text-center">Camera</h4>
+                        </div>
+                        <div id="divCamera"></div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!--Make another Row for the rest of the elements-->
+            <div class="row">
+                <!--Joystick-->
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h3 class="text-center">Joystick</h3>
+                            <hr>
+                            <p>Use to move the robot</p>
+                            <div id="dragstartzone" @mousedown="startDrag" @mousemove="doDrag">
+                            </div>
+                            <div id="dragCircle" :style="dragCircleStyle"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waypoints buttons-->
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h2 class="text-center">Waypoints</h2>
+                            <hr>
+                            <p>Some actions for the robot</p>
+                            <br>
+                            <button class="btn btn-primary" type="submit">Sofa</button>
+                            <button class="btn btn-primary" type="submit">Kitchen</button>
+                            <button class="btn btn-primary" type="submit">Living-room</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Robot State Infos-->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="text-center">Infos</h3>
+                            <hr />
+                            <p>Linear Velocity: {{ joystick.vertical.toFixed(3) }}</p>
+                            <br />
+                            <p>Angular Velocity: {{ joystick.horizontal.toFixed(3) }}</p>
+                            <br />
+                            <p>Position: X: {{ position.x.toFixed(2) }}, Y: {{ position.y.toFixed(2) }}, Z: {{
+                                position.z.toFixed(2) }} </p>
+                            <br />
+                            <p>Orientation: R: {{ orientation.r.toFixed(2) }}, P: {{ orientation.p.toFixed(2) }}, Y: {{
+                                orientation.y.toFixed(2) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </main>
+
+    <!-- footer -->
+    <footer class="footer mt-auto bg-dark text-light">
+        <div class="container">
+            <h5>page ends here!</h5>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        // We could have loaded main.js simply with:
+        //  <script type="text/javascript" src="main.js">
+        // BUT we were having caching-related problems.
+        // Loading main.js with a Date.now() in the URL we avoid using cache
+
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'main.js?v=3.' + Date.now();
+        document.head.appendChild(script);
+    </script>
+</body>
+
+</html>
