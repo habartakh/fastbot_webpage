@@ -28,10 +28,51 @@
 
 .header {
     height: 150px;
+    display: flex;
     /* Example: set a fixed height of 80 pixels */
 }
 
 p {
     line-height: 0.2;
     /* Sets line height to 1.5 times the font size */
+}
+
+.card {
+    /*Make sure the children have the same height and width as the parent*/
+    display: flex;
+}
+
+.card-body {
+    padding-left: 20px;
+    align-items: center
+}
+
+#divCamera {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    /* center horizontally */
+    display: block;
+    overflow: hidden;
+}
+
+#map {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    /* center horizontally */
+    display: block;
+    overflow: hidden;
+}
+
+#div3DViewer {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    /* center horizontally */
+    display: block;
+    overflow: hidden;
 }
