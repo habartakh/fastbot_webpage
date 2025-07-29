@@ -128,9 +128,12 @@
                             <hr>
                             <p>Some actions for the robot</p>
                             <br>
-                            <button class="btn btn-primary" @click="sendNavGoal('Sofa')">Sofa</button>
-                            <button class="btn btn-primary" @click="sendNavGoal('Kitchen')">Kitchen</button>
-                            <button class="btn btn-primary" @click="sendNavGoal('Living-room')">Living-room</button>
+                            <button class="btn btn-primary" :disabled="navigating"
+                                @click="sendNavGoal('Sofa')">Sofa</button>
+                            <button class="btn btn-primary" :disabled="navigating"
+                                @click="sendNavGoal('Kitchen')">Kitchen</button>
+                            <button class="btn btn-primary" :disabled="navigating"
+                                @click="sendNavGoal('Living-room')">Living-room</button>
                         </div>
                     </div>
                 </div>

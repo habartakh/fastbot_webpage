@@ -37,6 +37,8 @@ let vueApp = new Vue({
         viewer: null,
         tfClient: null,
         urdfClient: null,
+        // waypoint navigation
+        navigating: false, // true: robot is already going to a goal
 
     },
     methods: {
@@ -290,13 +292,23 @@ let vueApp = new Vue({
                 },
             });
 
+            // The robot started going towards the goal
+            this.navigating = true;
+
             goal.on('feedback', (feedback) => {
                 console.log('[Nav2] Feedback:', feedback);
             });
 
             goal.on('result', (result) => {
+                this.navigating = false;
                 console.log('[Nav2] Goal Result:', result);
                 alert(`Arrived at ${waypointName}`);
+                
+            });
+
+            goal.on('timeout', () => {
+                console.warn('Navigation goal timed out');
+                this.navigating = false;
             });
 
             goal.send();
