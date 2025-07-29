@@ -32,6 +32,15 @@
     /* Example: set a fixed height of 80 pixels */
 }
 
+.jumbotron {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    background-color: #e9ecef;
+    border-radius: 0.3rem;
+    width: 100%;
+    overflow-x: hidden;
+}
+
 p {
     line-height: 0.2;
     /* Sets line height to 1.5 times the font size */

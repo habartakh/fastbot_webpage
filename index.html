@@ -26,6 +26,9 @@
     <script src="./libs/ColladaLoader2.js"></script>
     <script src="./libs/STLLoader.js"></script>
     <script src="./libs/ros3d.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -33,7 +36,7 @@
     <header class="header">
         <div class="container">
             <div class="jumbotron text-center">
-                <h1>FastBot Navigation Functionnalities</h1>
+                <h1>FastBot Navigation</h1>
             </div>
         </div>
     </header>
@@ -96,10 +99,11 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h4 class="text-center">Camera</h4>
+                            <hr>
+                            <div id="divCamera"></div>
                         </div>
-                        <div id="divCamera" class="w-100"></div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
 
@@ -111,7 +115,7 @@
                         <div class="card-body text-center">
                             <h3 class="text-center">Robot Model</h3>
                             <hr>
-                            <div id="div3DViewer" class="w-100"></div>
+                            <div id="div3DViewer"></div>
                         </div>
                     </div>
                 </div>
