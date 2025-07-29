@@ -3,7 +3,7 @@ let vueApp = new Vue({
     data: {
         // ros connection
         ros: null,
-        rosbridge_address: 'wss://i-0480a3ce9baab5c10.robotigniteacademy.com/a5e5f539-a639-4ed0-9855-5bacb3ff328b/rosbridge/',
+        rosbridge_address: 'wss://i-061c0d038185af5db.robotigniteacademy.com/30209c2d-ce33-463f-8ffe-9a22bd4995aa/rosbridge/',
         connected: false,
         // page content
         menu_title: 'Connection',
@@ -247,6 +247,62 @@ let vueApp = new Vue({
         unset3DViewer() {
             document.getElementById('div3DViewer').innerHTML = ''
         },
+        // Go to the waypoint 
+        sendNavGoal(waypointName) {
+            const poseDict = {
+                'Sofa': {
+                    position: { x: 1.0, y: 2.0, z: 0.0 },
+                    orientation: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
+                },
+                'Kitchen': {
+                    position: { x: 3.5, y: -1.0, z: 0.0 },
+                    orientation: { x: 0.0, y: 0.0, z: 0.707, w: 0.707 },
+                },
+                'Living-room': {
+                    position: { x: -2.0, y: 0.5, z: 0.0 },
+                    orientation: { x: 0.0, y: 0.0, z: 1.0, w: 0.0 },
+                },
+            };
+
+            const pose = poseDict[waypointName];
+            if (!pose) {
+                console.error('Unknown waypoint:', waypointName);
+                return;
+            }
+
+            const actionClient = new ROSLIB.ActionClient({
+                ros: this.ros,
+                serverName: '/navigate_to_pose',
+                actionName: 'nav2_msgs/action/NavigateToPose',
+            });
+
+            const goal = new ROSLIB.Goal({
+                actionClient: actionClient,
+                goalMessage: {
+                    pose: {
+                        header: {
+                            frame_id: 'map',
+                            stamp: { sec: 0, nanosec: 0 },
+                        },
+                        pose: pose,
+                    },
+                    behavior_tree: '', 
+                },
+            });
+
+            goal.on('feedback', (feedback) => {
+                console.log('[Nav2] Feedback:', feedback);
+            });
+
+            goal.on('result', (result) => {
+                console.log('[Nav2] Goal Result:', result);
+                alert(`Arrived at ${waypointName}`);
+            });
+
+            goal.send();
+            console.log(`[Nav2] Goal sent to: ${waypointName}`);
+        }
+
 
     },
     mounted() {

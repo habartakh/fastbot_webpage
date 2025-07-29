@@ -128,9 +128,9 @@
                             <hr>
                             <p>Some actions for the robot</p>
                             <br>
-                            <button class="btn btn-primary" type="submit">Sofa</button>
-                            <button class="btn btn-primary" type="submit">Kitchen</button>
-                            <button class="btn btn-primary" type="submit">Living-room</button>
+                            <button class="btn btn-primary" @click="sendNavGoal('Sofa')">Sofa</button>
+                            <button class="btn btn-primary" @click="sendNavGoal('Kitchen')">Kitchen</button>
+                            <button class="btn btn-primary" @click="sendNavGoal('Living-room')">Living-room</button>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
     <!-- footer -->
     <footer class="footer mt-auto bg-dark text-light">
         <div class="container">
-            <h5>page ends here!</h5>
+            <h5>Footer</h5>
         </div>
     </footer>
 
