@@ -3,7 +3,7 @@ let vueApp = new Vue({
     data: {
         // ros connection
         ros: null,
-        rosbridge_address: 'wss://i-061c0d038185af5db.robotigniteacademy.com/30209c2d-ce33-463f-8ffe-9a22bd4995aa/rosbridge/',
+        rosbridge_address: 'wss://i-0ad1b8f3792830845.robotigniteacademy.com/f55cc02b-1f1a-4d3d-a0d7-391ed9423499/rosbridge/',
         connected: false,
         // page content
         menu_title: 'Connection',
@@ -45,7 +45,8 @@ let vueApp = new Vue({
         connect: function() {
             // define ROSBridge connection object
             this.ros = new ROSLIB.Ros({
-                url: this.rosbridge_address
+                url: this.rosbridge_address,
+                groovyCompatibility: false //! IMPORTANT: Cannot visualize the robot without it!
             })
 
             // define callbacks
@@ -87,7 +88,7 @@ let vueApp = new Vue({
                         y: euler.z
                     };
 
-                    console.log(message)
+                    //console.log(message)
                 })
 
                 // Map setup
@@ -211,10 +212,10 @@ let vueApp = new Vue({
             this.viewer = new ROS3D.Viewer({
                 background: '#cccccc',
                 divID: 'div3DViewer',
-                width: 250,
+                width: 350,
                 height: 300,
                 antialias: true,
-                fixedFrame: 'fastbot_1_odom'
+                fixedFrame: 'map'
             })
 
             // Add a grid.
@@ -230,7 +231,7 @@ let vueApp = new Vue({
                 angularThres: 0.01,
                 transThres: 0.01,
                 rate: 10.0,
-                fixedFrame: 'fastbot_1_base_link'
+                fixedFrame: 'map'
             })
 
             // Setup the URDF client.
@@ -251,40 +252,40 @@ let vueApp = new Vue({
         },
         // Go to the waypoint 
         sendNavGoal(waypointName) {
-            const poseDict = {
+            var poseDict = {
                 'Sofa': {
-                    position: { x: 1.0, y: 2.0, z: 0.0 },
+                    position: { x: -2.695, y: 1.118, z: 0.0 },
                     orientation: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
                 },
                 'Kitchen': {
-                    position: { x: 3.5, y: -1.0, z: 0.0 },
-                    orientation: { x: 0.0, y: 0.0, z: 0.707, w: 0.707 },
+                    position: { x: -0.738, y: -1.294, z: 0.0 },
+                    orientation: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
                 },
                 'Living-room': {
-                    position: { x: -2.0, y: 0.5, z: 0.0 },
-                    orientation: { x: 0.0, y: 0.0, z: 1.0, w: 0.0 },
+                    position: { x: 2.177, y: 1.386, z: 0.0 },
+                    orientation: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
                 },
             };
 
-            const pose = poseDict[waypointName];
+            var pose = poseDict[waypointName];
             if (!pose) {
                 console.error('Unknown waypoint:', waypointName);
                 return;
             }
 
-            const actionClient = new ROSLIB.ActionClient({
+            var actionClient = new ROSLIB.ActionClient({
                 ros: this.ros,
                 serverName: '/navigate_to_pose',
                 actionName: 'nav2_msgs/action/NavigateToPose',
             });
 
-            const goal = new ROSLIB.Goal({
+            var goal = new ROSLIB.Goal({
                 actionClient: actionClient,
                 goalMessage: {
                     pose: {
                         header: {
                             frame_id: 'map',
-                            stamp: { sec: 0, nanosec: 0 },
+                            // stamp: { sec: 0, nanosec: 0 },
                         },
                         pose: pose,
                     },
@@ -302,14 +303,15 @@ let vueApp = new Vue({
             goal.on('result', (result) => {
                 this.navigating = false;
                 console.log('[Nav2] Goal Result:', result);
-                alert(`Arrived at ${waypointName}`);
+                // alert(`Arrived at ${waypointName}`);
+                this.navigating = false;
                 
             });
 
-            goal.on('timeout', () => {
-                console.warn('Navigation goal timed out');
-                this.navigating = false;
-            });
+            // goal.on('timeout', () => {
+            //     console.warn('Navigation goal timed out');
+            //     this.navigating = false;
+            // });
 
             goal.send();
             console.log(`[Nav2] Goal sent to: ${waypointName}`);
