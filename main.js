@@ -257,11 +257,11 @@ let vueApp = new Vue({
                     position: { x: -2.695, y: 1.118, z: 0.0 },
                     orientation: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
                 },
-                'Kitchen': {
+                'Living-room': {
                     position: { x: -0.738, y: -1.294, z: 0.0 },
                     orientation: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
                 },
-                'Living-room': {
+                'Kitchen': {
                     position: { x: 2.177, y: 1.386, z: 0.0 },
                     orientation: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
                 },
@@ -273,49 +273,38 @@ let vueApp = new Vue({
                 return;
             }
 
-            var actionClient = new ROSLIB.ActionClient({
-                ros: this.ros,
-                serverName: '/navigate_to_pose',
-                actionName: 'nav2_msgs/action/NavigateToPose',
-            });
+            var goalTopic = new ROSLIB.Topic({
+                    ros: this.ros,
+                    name: '/goal_pose',
+                    messageType: 'geometry_msgs/PoseStamped'
+            })
 
-            var goal = new ROSLIB.Goal({
-                actionClient: actionClient,
-                goalMessage: {
-                    pose: {
-                        header: {
-                            frame_id: 'map',
-                            // stamp: { sec: 0, nanosec: 0 },
-                        },
-                        pose: pose,
-                    },
-                    behavior_tree: '', 
+
+            var goal = new ROSLIB.Message({
+                    header: {
+                    frame_id: 'map',
+                    stamp: {
+                        sec: 0,
+                        nanosec: 0
+                    }
                 },
+                pose: pose
             });
 
-            // The robot started going towards the goal
+            // Send the goal 
+            goalTopic.publish(goal);
+
+            // The robot started going towards the goal, will block the other waypoint buttons
             this.navigating = true;
 
-            goal.on('feedback', (feedback) => {
-                console.log('[Nav2] Feedback:', feedback);
-            });
-
-            goal.on('result', (result) => {
-                this.navigating = false;
-                console.log('[Nav2] Goal Result:', result);
-                // alert(`Arrived at ${waypointName}`);
-                this.navigating = false;
-                
-            });
-
-            // goal.on('timeout', () => {
-            //     console.warn('Navigation goal timed out');
-            //     this.navigating = false;
-            // });
-
-            goal.send();
             console.log(`[Nav2] Goal sent to: ${waypointName}`);
+
+            // Reset navigation state after 5 seconds
+            setTimeout(() => {
+                this.navigating = false;
+            }, 20000);
         }
+    
 
 
     },
