@@ -79,6 +79,12 @@ p {
     align-items: center
 }
 
+.card-body p {
+    word-wrap: break-word;
+    white-space: normal;
+    margin-bottom: 1.9rem;
+}
+
 .card-body input {
     width: 100%;
     /* Ensure the input tries to fill the container */
