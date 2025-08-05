@@ -3,7 +3,7 @@ let vueApp = new Vue({
     data: {
         // ros connection
         ros: null,
-        rosbridge_address: 'wss://i-05300da67429cbbdb.robotigniteacademy.com/d5ed44b8-dfe5-45cb-9d8e-8ac3a6de8b21/rosbridge/',
+        rosbridge_address: 'wss://i-0034ef92bcc82e192.robotigniteacademy.com/ef40ccc0-ddd2-4b74-9f41-febff324cd23/rosbridge/',
         connected: false,
         // page content
         menu_title: 'Connection',
@@ -95,7 +95,7 @@ let vueApp = new Vue({
                 this.mapViewer = new ROS2D.Viewer({
                     divID: 'map',
                     width: 420,
-                    height: 360
+                    height: 320
                 })
 
                 // Setup the map client.
@@ -191,7 +191,7 @@ let vueApp = new Vue({
                 divID: 'divCamera',
                 host: host,
                 width: 320,
-                height: 240,
+                height: 320,
                 topic: '/fastbot_1/camera/image_raw',
                 ssl: true,
             })
@@ -213,7 +213,7 @@ let vueApp = new Vue({
                 background: '#cccccc',
                 divID: 'div3DViewer',
                 width: 350,
-                height: 300,
+                height: 320,
                 antialias: true,
                 fixedFrame: 'map'
             })
